@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Res Well — Literary Scholar & Writer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════ TOKENS ═══════════════ */
+:root {
+  --cream:#f5f0e8; --parchment:#ede6d6; --ink:#1a1510; --ink-light:#3d3228;
+  --sepia:#8b6f47; --rust:#c4622d; --gold:#b8942a; --sage:#5a7a5c; --muted:#9a8f82;
+  --border:rgba(26,21,16,.12);
+  --px:clamp(1.25rem,5vw,5rem);
+  --py:clamp(3rem,7vw,6rem);
+}
+
+/* ═══════════════ RESET ═══════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(16px,1.8vw,18px);line-height:1.75;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5}
+img{max-width:100%;display:block}
+
+/* ═══════════════ NAV ═══════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:clamp(.9rem,2vw,1.2rem) var(--px);display:flex;align-items:center;justify-content:space-between;background:rgba(245,240,232,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);transition:padding .3s}
+.nav-logo{font-family:'Playfair Display',serif;font-size:clamp(1rem,2.5vw,1.15rem);font-weight:700;letter-spacing:.05em;text-decoration:none;color:var(--ink);white-space:nowrap}
+.nav-logo span{color:var(--rust)}
+.nav-links{display:flex;gap:clamp(1.2rem,2.5vw,2.5rem);list-style:none;align-items:center}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-light);text-decoration:none;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--rust);transition:width .3s}
+.nav-links a:hover{color:var(--rust)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{background:var(--ink)!important;color:var(--cream)!important;padding:.55rem 1.2rem!important}
+.nav-cta:hover{background:var(--rust)!important}
+.nav-cta::after{display:none!important}
+
+/* hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;z-index:300}
+.hamburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:transform .3s,opacity .3s;transform-origin:center}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* mobile overlay */
+.nav-overlay{display:none;position:fixed;inset:0;z-index:250;background:var(--cream);flex-direction:column;align-items:center;justify-content:center;gap:clamp(1.5rem,4vw,2.5rem);padding:2rem}
+.nav-overlay.open{display:flex}
+.nav-overlay a{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,7vw,2.8rem);font-weight:700;color:var(--ink);text-decoration:none;transition:color .2s}
+.nav-overlay a:hover{color:var(--rust)}
+.nav-overlay .ov-cta{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;background:var(--ink);color:var(--cream)!important;padding:1rem 2.5rem;margin-top:.5rem}
+.nav-overlay .ov-cta:hover{background:var(--rust)!important}
+
+/* ═══════════════ BUTTONS ═══════════════ */
+.btn{display:inline-block;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:.9rem 2rem;transition:background .2s,color .2s,border-color .2s;cursor:pointer;border:none;white-space:nowrap}
+.btn-dark{background:var(--ink);color:var(--cream)}
+.btn-dark:hover{background:var(--rust)}
+.btn-outline{background:transparent;color:var(--ink);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--rust);color:var(--rust)}
+.btn-white{background:white;color:var(--rust)}
+.btn-white:hover{background:var(--parchment)}
+
+/* ═══════════════ SECTION COMMONS ═══════════════ */
+.section{padding:var(--py) var(--px)}
+.section-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;display:flex;align-items:center;gap:.8rem}
+.section-label::after{content:'';flex:0 0 60px;height:1px;background:var(--border)}
+.section-label.light{color:var(--sepia)}
+.section-label.light::after{background:rgba(245,240,232,.15)}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.15;margin-bottom:.8rem}
+.section-intro{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,1.8vw,1.1rem);font-style:italic;color:var(--sepia);max-width:600px;margin-bottom:clamp(2rem,4vw,4rem)}
+.section-intro.light{color:rgba(245,240,232,.6);font-style:normal}
+
+/* ═══════════════ HERO ═══════════════ */
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:100vh;padding-top:72px}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:clamp(3rem,6vw,6rem) clamp(1.5rem,4vw,4rem) clamp(3rem,6vw,6rem) var(--px)}
+.hero-badge{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:clamp(1.2rem,3vw,2rem);display:flex;align-items:center;gap:.8rem}
+.hero-badge::before{content:'';display:block;width:36px;height:1px;background:var(--muted)}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,5.5vw,5.5rem);font-weight:900;line-height:1;letter-spacing:-.02em;margin-bottom:clamp(1rem,2vw,1.5rem)}
+.hero-title em{font-style:italic;color:var(--rust);display:block}
+.hero-subtitle{font-style:italic;font-weight:300;color:var(--sepia);font-size:clamp(1rem,1.8vw,1.15rem);max-width:420px;margin-bottom:clamp(1.2rem,2.5vw,2rem);line-height:1.5}
+.hero-bio{font-size:clamp(.9rem,1.5vw,1rem);color:var(--ink-light);font-weight:300;max-width:420px;line-height:1.85;margin-bottom:clamp(1.5rem,3vw,2.5rem)}
+.hero-actions{display:flex;gap:.85rem;flex-wrap:wrap;margin-bottom:clamp(2rem,4vw,3.5rem)}
+.hero-stats{display:flex;gap:clamp(1.5rem,4vw,3rem);flex-wrap:wrap;padding-top:clamp(1.2rem,2.5vw,2rem);border-top:1px solid var(--border)}
+.stat-num{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:700;display:block}
+.stat-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.hero-right{background:var(--parchment);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-portrait-frame{position:relative;width:clamp(200px,28vw,360px);height:clamp(260px,36vw,460px)}
+.hero-portrait-bg{position:absolute;inset:16px 16px 0 0;background:var(--ink);opacity:.08}
+.hero-portrait-box{position:absolute;inset:0 16px 16px 0;border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.portrait-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;background:linear-gradient(160deg,#e8e0cc 0%,#d4c8b0 100%)}
+.portrait-initials{font-family:'Playfair Display',serif;font-size:clamp(3.5rem,8vw,6rem);font-weight:900;color:var(--sepia);opacity:.4;line-height:1}
+.portrait-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.hero-deco{position:absolute;top:2.5rem;left:2.5rem;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;color:var(--muted);writing-mode:vertical-lr}
+.hero-quote{position:absolute;bottom:2.5rem;right:2.5rem;max-width:200px;text-align:right}
+.hero-quote blockquote{font-style:italic;font-size:.9rem;color:var(--sepia);line-height:1.5}
+.hero-quote cite{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.1em;color:var(--muted);display:block;margin-top:.4rem;font-style:normal}
+
+/* ═══════════════ WORK ═══════════════ */
+#work{background:var(--ink);color:var(--cream)}
+#work .section-title{color:var(--cream)}
+.featured-paper{display:grid;grid-template-columns:1.2fr 1fr;border:1px solid rgba(245,240,232,.1);margin-bottom:1.5rem;cursor:pointer;transition:border-color .3s}
+.featured-paper:hover{border-color:var(--rust)}
+.featured-content{padding:clamp(1.5rem,4vw,3.5rem);border-right:1px solid rgba(245,240,232,.1)}
+.featured-aside{padding:clamp(1.5rem,4vw,3.5rem);display:flex;flex-direction:column;justify-content:space-between}
+.paper-type{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:1rem}
+.paper-title{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,2.5vw,1.8rem);font-weight:700;line-height:1.25;color:var(--cream);margin-bottom:.8rem}
+.paper-excerpt{font-size:clamp(.85rem,1.5vw,.95rem);color:rgba(245,240,232,.65);line-height:1.8;font-weight:300;margin-bottom:1.5rem}
+.paper-meta{display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap}
+.paper-date{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--sepia)}
+.paper-read-link{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--cream);text-decoration:none;border-bottom:1px solid var(--rust);padding-bottom:2px;transition:color .2s}
+.paper-read-link:hover{color:var(--rust)}
+.featured-label{font-family:'Playfair Display',serif;font-size:.9rem;font-style:italic;color:rgba(245,240,232,.35);margin-bottom:1.5rem}
+.featured-topics{display:flex;flex-direction:column;gap:.4rem}
+.topic-tag{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:rgba(245,240,232,.5);border:1px solid rgba(245,240,232,.1);padding:.35rem .75rem;display:inline-block;width:fit-content;transition:border-color .2s,color .2s}
+.topic-tag:hover{border-color:var(--rust);color:var(--rust)}
+.papers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(245,240,232,.08);margin-top:1px}
+.paper-card{background:var(--ink);padding:clamp(1.5rem,3vw,2.5rem);transition:background .3s;cursor:pointer;text-decoration:none;display:block}
+.paper-card:hover{background:#231e18}
+.paper-card .paper-title{font-size:clamp(1rem,1.8vw,1.1rem);margin-bottom:.7rem;line-height:1.35}
+.paper-card .paper-excerpt{-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:1.2rem}
+
+/* ═══════════════ SEMINARS ═══════════════ */
+#seminars{background:var(--parchment)}
+.seminar-list{display:flex;flex-direction:column}
+.seminar-item{display:grid;grid-template-columns:100px 1fr 2rem;gap:clamp(1rem,3vw,3rem);align-items:start;padding:clamp(1.5rem,3vw,2.5rem) 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;position:relative;transition:opacity .2s}
+.seminar-item::before{content:'';position:absolute;left:calc(-1 * var(--px));right:calc(-1 * var(--px));top:0;bottom:0;background:rgba(196,98,45,.04);opacity:0;transition:opacity .3s}
+.seminar-item:hover::before{opacity:1}
+.seminar-num{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;color:var(--border);line-height:1;user-select:none}
+.seminar-body{position:relative;z-index:1}
+.seminar-course{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rust);margin-bottom:.4rem}
+.seminar-title{font-family:'Playfair Display',serif;font-size:clamp(1rem,2vw,1.3rem);font-weight:600;color:var(--ink);margin-bottom:.4rem;line-height:1.3}
+.seminar-desc{font-size:.88rem;color:var(--muted);font-weight:300;line-height:1.6}
+.seminar-arrow{font-size:1.1rem;color:var(--sepia);align-self:center;transition:transform .2s,color .2s}
+.seminar-item:hover .seminar-arrow{transform:translateX(4px);color:var(--rust)}
+
+/* ═══════════════ RESEARCH ═══════════════ */
+#research{background:var(--cream)}
+.research-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,4vw,3rem)}
+.research-area{border-top:2px solid var(--ink);padding-top:1.75rem}
+.research-area:nth-child(2){border-color:var(--rust)}
+.research-area:nth-child(3){border-color:var(--sage)}
+.research-area:nth-child(4){border-color:var(--gold)}
+.research-icon{font-size:1.6rem;margin-bottom:.8rem}
+.research-name{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,2vw,1.3rem);font-weight:700;margin-bottom:.5rem}
+.research-desc{font-size:.9rem;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:1rem}
+.research-papers{list-style:none;display:flex;flex-direction:column;gap:.3rem}
+.research-papers li{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.04em;color:var(--sepia);padding-left:1rem;position:relative}
+.research-papers li::before{content:'→';position:absolute;left:0}
+
+/* ═══════════════ COMPANIES ═══════════════ */
+#companies{background:var(--rust);color:white}
+#companies .section-title{color:white}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:clamp(2rem,4vw,4rem)}
+.service-card{background:rgba(255,255,255,.09);padding:clamp(1.5rem,3vw,2.5rem);transition:background .3s}
+.service-card:hover{background:rgba(255,255,255,.16)}
+.service-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:rgba(255,255,255,.15);margin-bottom:.8rem;line-height:1}
+.service-name{font-family:'Playfair Display',serif;font-size:clamp(1rem,1.8vw,1.15rem);font-weight:600;color:white;margin-bottom:.6rem}
+.service-desc{font-size:.88rem;color:rgba(255,255,255,.7);font-weight:300;line-height:1.7}
+.company-cta-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;padding-top:clamp(1.5rem,3vw,3rem);border-top:1px solid rgba(255,255,255,.15)}
+.company-cta-text{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.5vw,1.6rem);font-weight:700;font-style:italic;color:white;max-width:500px;line-height:1.35}
+
+/* ═══════════════ COMMISSION ═══════════════ */
+#commission{background:var(--parchment)}
+.commission-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(2rem,6vw,6rem);align-items:start}
+.commission-info h3{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:.6rem;margin-top:2rem}
+.commission-info h3:first-child{margin-top:0}
+.commission-info p{font-size:.95rem;color:var(--muted);font-weight:300;line-height:1.8}
+.turnaround-list{list-style:none;margin-top:.8rem;display:flex;flex-direction:column;gap:.4rem}
+.turnaround-list li{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.04em;color:var(--sepia);display:flex;align-items:center;gap:.6rem}
+.turnaround-list li::before{content:'';width:6px;height:6px;background:var(--rust);display:block;flex-shrink:0}
+.form-card{background:var(--cream);padding:clamp(1.5rem,4vw,3.5rem);border:1px solid var(--border)}
+.form-title{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,2.5vw,1.5rem);font-weight:700;margin-bottom:.3rem}
+.form-subtitle{font-style:italic;font-size:.95rem;color:var(--muted);margin-bottom:2rem}
+.form-group{margin-bottom:1.3rem}
+.form-group label{display:block;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-light);margin-bottom:.45rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.8rem 1rem;border:1px solid var(--border);background:var(--cream);font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink);outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none;border-radius:0}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--rust)}
+.form-group textarea{resize:vertical;min-height:120px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-submit{width:100%;padding:1rem;background:var(--ink);color:var(--cream);font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;border:none;cursor:pointer;transition:background .2s;margin-top:.4rem}
+.form-submit:hover{background:var(--rust)}
+.form-note{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.05em;color:var(--muted);margin-top:.9rem;text-align:center}
+#form-success{display:none;text-align:center;padding:3rem 1rem}
+#form-success .s-icon{font-size:2.5rem;margin-bottom:1rem}
+#form-success h3{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--ink);margin-bottom:.4rem}
+#form-success p{font-size:.95rem;color:var(--muted)}
+
+/* ═══════════════ ABOUT ═══════════════ */
+#about{background:var(--ink);color:var(--cream)}
+#about .section-title{color:var(--cream)}
+.about-layout{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(2rem,6vw,6rem);align-items:start}
+.about-text p{font-size:clamp(.9rem,1.6vw,1.05rem);color:rgba(245,240,232,.8);font-weight:300;line-height:1.9;margin-bottom:1.2rem}
+.about-text p:first-child{font-family:'Playfair Display',serif;font-size:clamp(1.05rem,2vw,1.3rem);font-style:italic;color:rgba(245,240,232,.9);line-height:1.6}
+.highlight-item{padding:1.4rem 0;border-bottom:1px solid rgba(245,240,232,.08)}
+.highlight-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--sepia);margin-bottom:.4rem}
+.highlight-value{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;color:var(--cream);line-height:1.4}
+
+/* ═══════════════ FOOTER ═══════════════ */
+footer{background:#100d09;color:var(--cream);padding:clamp(2.5rem,5vw,4rem) var(--px) clamp(1.5rem,3vw,2.5rem)}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:2rem;margin-bottom:clamp(2rem,4vw,3rem)}
+.footer-name{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,1.5rem);font-weight:700;color:var(--cream);margin-bottom:.25rem}
+.footer-tagline{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--sepia)}
+.footer-links{display:flex;gap:clamp(1.5rem,4vw,3rem);flex-wrap:wrap}
+.footer-col h4{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--sepia);margin-bottom:.9rem}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:.4rem}
+.footer-col ul li a{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:rgba(245,240,232,.5);text-decoration:none;transition:color .2s}
+.footer-col ul li a:hover{color:var(--cream)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem;padding-top:1.5rem;border-top:1px solid rgba(245,240,232,.06)}
+.footer-copy{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.1em;color:rgba(245,240,232,.25)}
+.footer-social{display:flex;gap:1.2rem}
+.footer-social a{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.35);text-decoration:none;transition:color .2s}
+.footer-social a:hover{color:var(--rust)}
+
+/* ═══════════════ MODAL ═══════════════ */
+#paper-modal{display:none;position:fixed;inset:0;background:rgba(26,21,16,.88);z-index:500;overflow-y:auto;padding:clamp(1rem,4vw,4rem) clamp(.75rem,3vw,2rem)}
+.modal-inner{max-width:720px;margin:auto;background:var(--cream);padding:clamp(1.5rem,5vw,4rem);position:relative}
+.modal-close{position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--muted);transition:color .2s}
+.modal-close:hover{color:var(--rust)}
+#modal-type{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:1rem}
+#modal-title{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,1.8rem);font-weight:700;line-height:1.25;color:var(--ink);margin-bottom:1.2rem}
+#modal-meta{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--muted);margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+#modal-body p{font-family:'Cormorant Garamond',serif;font-size:clamp(.95rem,1.8vw,1.05rem);line-height:1.9;color:var(--ink-light);font-weight:300;margin-bottom:1.2rem}
+.modal-actions{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+
+/* ═══════════════ ANIMATIONS ═══════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero-left>*{animation:fadeUp .7s ease both}
+.hero-badge{animation-delay:.1s}.hero-title{animation-delay:.2s}.hero-subtitle{animation-delay:.3s}
+.hero-bio{animation-delay:.35s}.hero-actions{animation-delay:.4s}.hero-stats{animation-delay:.5s}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:var(--sepia)}
+
+/* ═══════════════ RESPONSIVE — TABLET ≤1100px ═══════════════ */
+@media(max-width:1100px){
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-left{padding:clamp(5rem,10vw,7rem) var(--px) clamp(2.5rem,5vw,4rem)}
+  .hero-right{min-height:clamp(280px,50vw,420px)}
+  .hero-deco{display:none}
+  .hero-subtitle,.hero-bio{max-width:100%}
+  .papers-grid{grid-template-columns:1fr 1fr}
+  .services-grid{grid-template-columns:1fr 1fr}
+  .about-layout,.commission-layout{grid-template-columns:1fr;gap:2.5rem}
+  .research-grid{grid-template-columns:1fr 1fr}
+  .seminar-item{grid-template-columns:80px 1fr auto;gap:1.5rem}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+}
+
+/* ═══════════════ RESPONSIVE — PHONE ≤640px ═══════════════ */
+@media(max-width:640px){
+  .hero-right{min-height:240px}
+  .hero-quote{display:none}
+  .hero-portrait-frame{width:clamp(140px,48vw,220px);height:clamp(180px,62vw,285px)}
+  .hero-actions{flex-direction:column}
+  .hero-actions .btn{width:100%;text-align:center}
+  .featured-paper{grid-template-columns:1fr}
+  .featured-content{border-right:none;border-bottom:1px solid rgba(245,240,232,.1)}
+  .papers-grid{grid-template-columns:1fr}
+  .seminar-item{grid-template-columns:50px 1fr;gap:1rem}
+  .seminar-num{font-size:1.8rem}
+  .seminar-arrow{display:none}
+  .research-grid{grid-template-columns:1fr}
+  .services-grid{grid-template-columns:1fr}
+  .company-cta-row{flex-direction:column}
+  .btn-white{width:100%;text-align:center}
+  .form-row{grid-template-columns:1fr}
+  .footer-top{flex-direction:column}
+  .footer-links{flex-direction:column;gap:1.5rem}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+}
+
+@media(max-width:390px){
+  .hero-title{font-size:2.2rem}
+  .stat-num{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE MENU -->
+<div class="nav-overlay" id="navOverlay">
+  <a href="#work"       onclick="closeNav()">Work</a>
+  <a href="#seminars"   onclick="closeNav()">Seminars</a>
+  <a href="#research"   onclick="closeNav()">Research</a>
+  <a href="#about"      onclick="closeNav()">About</a>
+  <a href="#commission" onclick="closeNav()" class="ov-cta">Commission Work</a>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#home"><span>R</span>es Well</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#seminars">Seminars</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#commission" class="nav-cta">Commission Work</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="hero-badge">BA English Literature · Class of 2025</div>
+    <h1 class="hero-title">Words that<br><em>illuminate</em></h1>
+    <p class="hero-subtitle">Literary scholar, essayist &amp; cultural critic exploring the intersections of language, power, and identity.</p>
+    <p class="hero-bio">I write academic papers, research essays, and critical analyses across Victorian literature, postcolonial theory, feminist narratives, and contemporary fiction. My work has been presented at departmental seminars and published in university journals.</p>
+    <div class="hero-actions">
+      <a href="#work"       class="btn btn-dark">Read My Work</a>
+      <a href="#commission" class="btn btn-outline">Commission a Piece</a>
+    </div>
+    <div class="hero-stats">
+      <div><span class="stat-num">18+</span><span class="stat-label">Papers Published</span></div>
+      <div><span class="stat-num">6</span><span class="stat-label">Seminars Given</span></div>
+      <div><span class="stat-num">3</span><span class="stat-label">Research Areas</span></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-deco">Literary Portfolio · 2024–2025</div>
+    <div class="hero-portrait-frame">
+      <div class="hero-portrait-bg"></div>
+      <div class="hero-portrait-box">
+        <div class="portrait-placeholder">
+          <div class="portrait-initials">RW</div>
+          <div class="portrait-label">Upload Your Photo</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-quote">
+      <blockquote>"Literature is the most agreeable way of ignoring life."</blockquote>
+      <cite>— Fernando Pessoa</cite>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="section" id="work">
+  <div class="section-label light">Published Writing</div>
+  <h2 class="section-title">Papers &amp; Essays</h2>
+  <p class="section-intro light">Academic papers, critical essays, and long-form analyses across literary theory and cultural criticism.</p>
+
+  <div class="featured-paper" onclick="openModal('paper1')">
+    <div class="featured-content">
+      <div class="paper-type">Featured · Research Paper</div>
+      <h3 class="paper-title">"The Gaze Reversed: Female Agency in Victorian Sensation Fiction"</h3>
+      <p class="paper-excerpt">This paper examines how Wilkie Collins and Mary Elizabeth Braddon deploy female protagonists who consciously subvert the patriarchal male gaze, constructing interiority that resists narrative surveillance. Drawing on Laura Mulvey's visual theory and Foucauldian frameworks of disciplinary power, I argue that sensation fiction constitutes a covert feminist archive...</p>
+      <div class="paper-meta">
+        <span class="paper-date">March 2025 · 7,200 words</span>
+        <a class="paper-read-link" href="#" onclick="openModal('paper1');return false;">Read Full Paper →</a>
+      </div>
+    </div>
+    <div class="featured-aside">
+      <div class="featured-label">Key Themes &amp; Frameworks</div>
+      <div class="featured-topics">
+        <span class="topic-tag">Victorian Literature</span>
+        <span class="topic-tag">Feminist Theory</span>
+        <span class="topic-tag">Gaze Theory</span>
+        <span class="topic-tag">Sensation Fiction</span>
+        <span class="topic-tag">Wilkie Collins</span>
+        <span class="topic-tag">Foucault</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="papers-grid">
+    <a class="paper-card" href="#" onclick="openModal('paper2');return false;">
+      <div class="paper-type">Essay · Postcolonial Theory</div>
+      <h3 class="paper-title">"Language as Wound: Linguistic Alienation in Achebe and Ngugi"</h3>
+      <p class="paper-excerpt">A comparative study of how Chinua Achebe and Ngũgĩ wa Thiong'o negotiate the colonial language—one writing in English as reclamation, the other abandoning it as decolonial act.</p>
+      <div class="paper-date">Jan 2025 · 5,800 words</div>
+    </a>
+    <a class="paper-card" href="#" onclick="openModal('paper3');return false;">
+      <div class="paper-type">Seminar Paper · Gothic Studies</div>
+      <h3 class="paper-title">"The House That Haunts: Architecture as Psychological Interior in Gothic Fiction"</h3>
+      <p class="paper-excerpt">Examining Wuthering Heights and The Fall of the House of Usher, this paper argues that Gothic architecture functions as an externalisation of repressed psychic content.</p>
+      <div class="paper-date">Nov 2024 · 4,400 words</div>
+    </a>
+    <a class="paper-card" href="#" onclick="openModal('paper4');return false;">
+      <div class="paper-type">Research Essay · Modernism</div>
+      <h3 class="paper-title">"Silence as Syntax: The Grammar of Omission in Hemingway's Iceberg Prose"</h3>
+      <p class="paper-excerpt">This essay applies structuralist and narratological frameworks to Hemingway's theory of omission, arguing that what is withheld constitutes an equal narrative force to what is stated.</p>
+      <div class="paper-date">Oct 2024 · 3,900 words</div>
+    </a>
+    <a class="paper-card" href="#" onclick="openModal('paper5');return false;">
+      <div class="paper-type">Critical Analysis · Contemporary</div>
+      <h3 class="paper-title">"Autofiction and the Unstable 'I': Self, Shame, and Testimony in Annie Ernaux"</h3>
+      <p class="paper-excerpt">Through close reading of The Years and Shame, this paper explores how Ernaux weaponises autofiction to transform private humiliation into collective social testimony.</p>
+      <div class="paper-date">Sep 2024 · 5,100 words</div>
+    </a>
+    <a class="paper-card" href="#" onclick="openModal('paper6');return false;">
+      <div class="paper-type">Dissertation Chapter · 2025</div>
+      <h3 class="paper-title">"Embodied Dissent: The Female Body as Political Text in Angela Carter"</h3>
+      <p class="paper-excerpt">A chapter from my undergraduate dissertation arguing that Carter's grotesque femininity in The Bloody Chamber dismantles fairy tale ideology and patriarchal mythology.</p>
+      <div class="paper-date">May 2025 · 9,000 words</div>
+    </a>
+    <a class="paper-card" href="#" onclick="openModal('paper7');return false;">
+      <div class="paper-type">Essay · Ecocriticism</div>
+      <h3 class="paper-title">"Nature Writes Back: Ecocritical Readings of Pastoral Nostalgia in Hardy"</h3>
+      <p class="paper-excerpt">An ecocritical intervention into Hardy's Wessex novels, questioning the pastoral idyll as a site of environmental mourning and critiquing the colonial logic embedded in nature writing.</p>
+      <div class="paper-date">Jul 2024 · 4,700 words</div>
+    </a>
+  </div>
+</section>
+
+<!-- SEMINARS -->
+<section class="section" id="seminars">
+  <div class="section-label">Presented Work</div>
+  <h2 class="section-title">Seminars &amp; Presentations</h2>
+  <p class="section-intro">Academic seminars, discussion papers, and presentations delivered in university settings.</p>
+  <div class="seminar-list">
+    <a class="seminar-item" href="#" onclick="openModal('sem1');return false;">
+      <div class="seminar-num">01</div>
+      <div class="seminar-body">
+        <div class="seminar-course">ENGL 3204 — Victorian Literature</div>
+        <div class="seminar-title">"Poisoning the Domestic: Sensation, Secrets and the Victorian Home"</div>
+        <div class="seminar-desc">Exploring how the domestic space becomes a site of transgression in Lady Audley's Secret. Presented to 40+ students and faculty. Spring 2025.</div>
+      </div>
+      <div class="seminar-arrow">→</div>
+    </a>
+    <a class="seminar-item" href="#" onclick="openModal('sem2');return false;">
+      <div class="seminar-num">02</div>
+      <div class="seminar-body">
+        <div class="seminar-course">ENGL 4102 — Postcolonial Theory</div>
+        <div class="seminar-title">"Whose English? Language, Authority and the Postcolonial Writer"</div>
+        <div class="seminar-desc">Examining Ngũgĩ, Achebe, and Rushdie's very different negotiations with English as both colonisation and resistance. Autumn 2024.</div>
+      </div>
+      <div class="seminar-arrow">→</div>
+    </a>
+    <a class="seminar-item" href="#" onclick="openModal('sem3');return false;">
+      <div class="seminar-num">03</div>
+      <div class="seminar-body">
+        <div class="seminar-course">Undergraduate Symposium 2025</div>
+        <div class="seminar-title">"Reading Against the Grain: Queer Theory and the Literary Canon"</div>
+        <div class="seminar-desc">Delivered at the annual undergraduate research symposium. Won Best Paper Award.</div>
+      </div>
+      <div class="seminar-arrow">→</div>
+    </a>
+    <a class="seminar-item" href="#" onclick="openModal('sem4');return false;">
+      <div class="seminar-num">04</div>
+      <div class="seminar-body">
+        <div class="seminar-course">ENGL 3308 — Feminist Literary Criticism</div>
+        <div class="seminar-title">"The Madwoman is Not in the Attic: Re-reading Bertha Mason"</div>
+        <div class="seminar-desc">Challenges the simplistic rescue of Bertha, asking more uncomfortable questions about Jane Eyre's complicity. Spring 2025.</div>
+      </div>
+      <div class="seminar-arrow">→</div>
+    </a>
+    <a class="seminar-item" href="#" onclick="openModal('sem5');return false;">
+      <div class="seminar-num">05</div>
+      <div class="seminar-body">
+        <div class="seminar-course">Reading Group · Contemporary Fiction</div>
+        <div class="seminar-title">"Grief as Form: Autofiction, Time, and Loss in Rachel Cusk's Outline Trilogy"</div>
+        <div class="seminar-desc">Close reading and guided discussion exploring Cusk's radical self-erasure as a grammar for loss and female experience. Summer 2024.</div>
+      </div>
+      <div class="seminar-arrow">→</div>
+    </a>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section class="section" id="research">
+  <div class="section-label">Scholarly Focus</div>
+  <h2 class="section-title">Research Interests</h2>
+  <p class="section-intro">Four interlocking areas of scholarly inquiry that run across my academic writing.</p>
+  <div class="research-grid">
+    <div class="research-area">
+      <div class="research-icon">📖</div>
+      <div class="research-name">Victorian &amp; Gothic Literature</div>
+      <p class="research-desc">Sensation fiction, domestic ideology, the uncanny, and the ideological work of the realist novel in producing and contesting Victorian social norms.</p>
+      <ul class="research-papers">
+        <li>The Gaze Reversed: Collins &amp; Braddon</li>
+        <li>Architecture as Interior in Gothic Fiction</li>
+        <li>The Poisoned Home: Lady Audley</li>
+        <li>Hardy's Pastoral Ecocriticism</li>
+      </ul>
+    </div>
+    <div class="research-area">
+      <div class="research-icon">🌍</div>
+      <div class="research-name">Postcolonial Theory &amp; World Literature</div>
+      <p class="research-desc">Language as colonial wound, the politics of literary form, subaltern voice, and how African and South Asian writers negotiate inherited literary traditions.</p>
+      <ul class="research-papers">
+        <li>Linguistic Alienation: Achebe vs Ngugi</li>
+        <li>Whose English? Postcolonial Language</li>
+        <li>Reading Rushdie Against Empire</li>
+      </ul>
+    </div>
+    <div class="research-area">
+      <div class="research-icon">✊</div>
+      <div class="research-name">Feminist &amp; Queer Literary Theory</div>
+      <p class="research-desc">Female interiority, the gaze, the body as political text, queer reading strategies, and ways literary form can be an agent of ideological resistance.</p>
+      <ul class="research-papers">
+        <li>Embodied Dissent: Angela Carter</li>
+        <li>The Madwoman Reconsidered</li>
+        <li>Queering the Canon: Symposium Paper</li>
+        <li>Ernaux: Shame as Social Testimony</li>
+      </ul>
+    </div>
+    <div class="research-area">
+      <div class="research-icon">✍️</div>
+      <div class="research-name">Modernism &amp; Contemporary Fiction</div>
+      <p class="research-desc">Autofiction, narrative form as political act, consciousness and omission in modernist prose, and the contemporary novel's negotiation of testimony and memory.</p>
+      <ul class="research-papers">
+        <li>Hemingway's Iceberg Theory</li>
+        <li>Autofiction &amp; the Unstable 'I'</li>
+        <li>Grief as Form: Rachel Cusk</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- COMPANIES -->
+<section class="section" id="companies">
+  <div class="section-label light">For Organisations &amp; Businesses</div>
+  <h2 class="section-title">Professional Writing Services</h2>
+  <p class="section-intro light">Beyond academia, I offer high-quality writing and editorial services to publishers, cultural organisations, media companies, and brands who need a skilled literary voice.</p>
+  <div class="services-grid">
+    <div class="service-card"><div class="service-num">01</div><div class="service-name">Editorial &amp; Content Writing</div><p class="service-desc">Long-form articles, book reviews, cultural commentary, and editorial content for literary magazines, publishing houses, and cultural platforms.</p></div>
+    <div class="service-card"><div class="service-num">02</div><div class="service-name">Copywriting &amp; Brand Narratives</div><p class="service-desc">Punchy, literary copywriting that avoids cliché. Website copy, campaign copy, brand manifestos for brands with cultural ambitions.</p></div>
+    <div class="service-card"><div class="service-num">03</div><div class="service-name">Research &amp; Literary Consultancy</div><p class="service-desc">Subject-matter expertise for publishers, producers, and educators. Literary research, contextual notes, manuscript sensitivity reads, educational content.</p></div>
+    <div class="service-card"><div class="service-num">04</div><div class="service-name">Proofreading &amp; Editing</div><p class="service-desc">Detailed line editing, structural feedback, and academic proofreading. Skilled in literary essays, academic articles, and long-form journalism.</p></div>
+    <div class="service-card"><div class="service-num">05</div><div class="service-name">Academic Coaching &amp; Tutoring</div><p class="service-desc">Essay coaching, model essays, and one-to-one literary analysis tutoring for A-level and undergraduate students.</p></div>
+    <div class="service-card"><div class="service-num">06</div><div class="service-name">Book Club &amp; Reading Guides</div><p class="service-desc">Beautifully written reading guides, discussion questions, and contextual notes for book clubs, reading apps, and publishers.</p></div>
+  </div>
+  <div class="company-cta-row">
+    <p class="company-cta-text">"Looking for a literary voice that's rigorous and readable? Let's work together."</p>
+    <a href="#commission" class="btn btn-white">Send a Brief →</a>
+  </div>
+</section>
+
+<!-- COMMISSION -->
+<section class="section" id="commission">
+  <div class="section-label">Get in Touch</div>
+  <h2 class="section-title">Commission a Piece</h2>
+  <p class="section-intro">Whether you're a publisher, organisation, or individual — tell me what you need and I'll tell you if I can help.</p>
+  <div class="commission-layout">
+    <div class="commission-info">
+      <h3>What I Can Write For You</h3>
+      <p>Essays, reviews, articles, literary analyses, editorial content, copywriting, research papers, educational materials, reading guides, and more.</p>
+      <h3>Who I Work With</h3>
+      <p>Publishers, literary magazines, cultural organisations, educational companies, creative agencies, brands with cultural ambitions, and individuals who need high-quality writing.</p>
+      <h3>Typical Turnaround</h3>
+      <ul class="turnaround-list">
+        <li>Short articles (500–1,000 words): 3–5 days</li>
+        <li>Essays / analyses (2,000–5,000 words): 1–2 weeks</li>
+        <li>Research papers (5,000+ words): 2–4 weeks</li>
+        <li>Ongoing editorial: Monthly retainer available</li>
+        <li>Rush commissions: Ask and I'll let you know</li>
+      </ul>
+      <h3>Rates</h3>
+      <p>Rates vary by length, complexity, and deadline. I'll always give you a clear quote before we begin. No surprises.</p>
+    </div>
+    <div class="form-card">
+      <div id="commission-form-wrap">
+        <div class="form-title">Send Your Brief</div>
+        <p class="form-subtitle">Tell me about your project — I respond within 48 hours.</p>
+        <form id="commission-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group"><label>Your Name *</label><input type="text" id="fname" placeholder="Jane Smith" required></div>
+            <div class="form-group"><label>Email Address *</label><input type="email" id="femail" placeholder="jane@company.com" required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Organisation / Company</label><input type="text" id="forg" placeholder="Publisher, Magazine, Agency..."></div>
+            <div class="form-group"><label>Type of Work *</label>
+              <select id="ftype" required>
+                <option value="">Select a type...</option>
+                <option>Essay / Article</option><option>Literary Analysis / Criticism</option>
+                <option>Research Paper</option><option>Book Review</option>
+                <option>Copywriting / Brand Content</option><option>Editing / Proofreading</option>
+                <option>Educational / Reading Guides</option><option>Academic Tutoring / Coaching</option>
+                <option>Other — I'll explain below</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Approximate Word Count</label>
+              <select id="fwords">
+                <option value="">Not sure yet...</option><option>Under 1,000 words</option>
+                <option>1,000 – 3,000 words</option><option>3,000 – 6,000 words</option>
+                <option>6,000 – 10,000 words</option><option>10,000+ words</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Desired Deadline</label><input type="date" id="fdeadline"></div>
+          </div>
+          <div class="form-group"><label>Topic / Subject Area *</label><input type="text" id="ftopic" placeholder="e.g. Victorian literature, feminist criticism, book review of X..." required></div>
+          <div class="form-group"><label>Tell Me About Your Project *</label><textarea id="fdesc" placeholder="What do you need? Who's the audience? Any specific angle, style, or brief?" required></textarea></div>
+          <button type="submit" class="form-submit">Send Brief →</button>
+          <p class="form-note">I respond to every enquiry within 48 hours. Your info won't be shared.</p>
+        </form>
+      </div>
+      <div id="form-success">
+        <div class="s-icon">✦</div>
+        <h3>Brief Received</h3>
+        <p>Thank you — I'll read your brief carefully and reply within 48 hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="section-label light">The Scholar Behind the Work</div>
+  <h2 class="section-title">About Res Well</h2>
+  <div class="about-layout">
+    <div class="about-text">
+      <p>"I became a literary scholar because I believe stories are never just stories — they are the ideological architecture of how we understand gender, power, race, and selfhood."</p>
+      <p>I'm a final-year BA English Literature student with a specialism in Victorian literature, feminist literary theory, and postcolonial studies. My undergraduate work has earned distinctions across departments, and my dissertation on Angela Carter and feminist Gothic received the highest mark in my cohort.</p>
+      <p>I write essays that are rigorous without being impenetrable, and I believe deeply that academic criticism should speak to people beyond the seminar room. I'm currently seeking postgraduate study opportunities and professional writing work in publishing, editorial, and cultural journalism.</p>
+      <p>When I'm not in the library, I'm reading contemporary fiction, attending literary events, and contributing reviews to student publications.</p>
+    </div>
+    <div class="about-highlights">
+      <div class="highlight-item"><div class="highlight-label">Institution</div><div class="highlight-value">BA English Literature · University of [Your University]</div></div>
+      <div class="highlight-item"><div class="highlight-label">Graduation</div><div class="highlight-value">Class of 2025 · First Class Honours (expected)</div></div>
+      <div class="highlight-item"><div class="highlight-label">Specialisms</div><div class="highlight-value">Victorian Gothic · Feminist Theory · Postcolonial Studies · Modernism</div></div>
+      <div class="highlight-item"><div class="highlight-label">Awards</div><div class="highlight-value">Best Undergraduate Paper, Annual Symposium 2025</div></div>
+      <div class="highlight-item"><div class="highlight-label">Published In</div><div class="highlight-value">University Literary Review · Department Journal · Student Press</div></div>
+      <div class="highlight-item"><div class="highlight-label">Currently Seeking</div><div class="highlight-value">Publishing internships · Editorial roles · MA opportunities 2025–26</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-name">Res Well</div>
+      <div class="footer-tagline">Literary Scholar &amp; Writer · Est. 2023</div>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col"><h4>Writing</h4><ul><li><a href="#work">Papers &amp; Essays</a></li><li><a href="#seminars">Seminars</a></li><li><a href="#research">Research Areas</a></li></ul></div>
+      <div class="footer-col"><h4>Work With Me</h4><ul><li><a href="#companies">For Companies</a></li><li><a href="#commission">Commission a Piece</a></li><li><a href="#about">About Me</a></li></ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul><li><a href="mailto:reswell@example.com">reswell@example.com</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Academia.edu</a></li></ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Res Well. All rights reserved.</div>
+    <div class="footer-social"><a href="#">LinkedIn</a><a href="#">Academia.edu</a><a href="#">Twitter / X</a></div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div id="paper-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal()">CLOSE ✕</button>
+    <div id="modal-type"></div>
+    <h2 id="modal-title"></h2>
+    <div id="modal-meta"></div>
+    <div id="modal-body"></div>
+    <div class="modal-actions"><a href="#commission" class="btn btn-dark" onclick="closeModal()">Commission Similar Work</a></div>
+  </div>
+</div>
+
+<script>
+const papers={
+  paper1:{type:"Research Paper · Victorian Literature",title:'"The Gaze Reversed: Female Agency in Victorian Sensation Fiction"',meta:"March 2025 · 7,200 words · ENGL 3204 Victorian Literature",body:`<p>This paper examines how Wilkie Collins and Mary Elizabeth Braddon deploy female protagonists who consciously subvert the patriarchal male gaze, constructing an interiority that resists narrative surveillance. Drawing on Laura Mulvey's visual theory and Foucauldian frameworks of disciplinary power, I argue that sensation fiction constitutes a covert feminist archive.</p><p>The domestic space in these novels is never merely domestic: it is a theatre of watching, being watched, and — crucially — watching back. Lady Audley does not simply conceal her past; she orchestrates the gaze of those around her with a precision that renders her watchers into watched.</p><p>I read these reversals not as isolated moments of characterological agency but as structurally embedded critiques of the scopic regimes that policed Victorian femininity. The sensation novel is uniquely positioned to expose the mechanics of gendered looking — and to dramatise the costs of visibility for women who would not submit to being seen on others' terms.</p><p><em>This paper received a mark of 78 (First Class) and was nominated for the departmental prize in Victorian Studies.</em></p>`},
+  paper2:{type:"Essay · Postcolonial Theory",title:'"Language as Wound: Linguistic Alienation in Achebe and Ngugi"',meta:"January 2025 · 5,800 words · ENGL 4102 Postcolonial Theory",body:`<p>This comparative study examines how Chinua Achebe and Ngũgĩ wa Thiong'o negotiate the colonial language with strikingly divergent but equally political outcomes. Where Achebe bends English into the service of Igbo worldviews, Ngũgĩ's eventual abandonment of English for Gikuyu constitutes a radical decolonial act.</p><p>The central question this paper pursues is: can a wound be used as a weapon? For Achebe, the answer is qualified but affirmative. For Ngũgĩ, the question itself is the trap. I draw on Frantz Fanon's theorisation of colonial language as psychic colonisation, and on Homi Bhabha's concept of hybridity, to argue that both writers expose the impossibility of neutral ground in the politics of postcolonial literary language.</p>`},
+  paper3:{type:"Seminar Paper · Gothic Studies",title:'"The House That Haunts: Architecture as Psychological Interior in Gothic Fiction"',meta:"November 2024 · 4,400 words · Seminar Presentation",body:`<p>This paper reads Gothic architecture not as backdrop but as psychology made visible — the exteriorisation of the interiority that bourgeois fiction typically refuses to show. In both Wuthering Heights and "The Fall of the House of Usher," the house does not merely contain its inhabitants: it thinks, feels, and decays alongside them.</p><p>I apply Gaston Bachelard's Poetics of Space to read Wuthering Heights as a psychology of thresholds, violence, and the failure of interiority to remain interior. The house is Heathcliff's mind made manifest — a structure that refuses domestication, that weather assaults from without because what is within cannot be contained.</p>`},
+  paper4:{type:"Research Essay · Modernism",title:'"Silence as Syntax: The Grammar of Omission in Hemingway\'s Iceberg Prose"',meta:"October 2024 · 3,900 words · ENGL 3107 Modernism",body:`<p>Ernest Hemingway's iceberg theory is one of the most cited and least examined principles in twentieth-century literary criticism. This essay subjects it to rigorous narratological analysis, asking: what is the formal grammar of omission, and how does withheld content function as an active narrative force?</p><p>Drawing on structuralist narratology and close reading of "Hills Like White Elephants" and "A Clean, Well-Lighted Place," I argue that Hemingway's silences are not absences but presences of a different kind — shaped, pressurised, and communicative precisely because the surface prose refuses to name them.</p>`},
+  paper5:{type:"Critical Analysis · Contemporary Fiction",title:'"Autofiction and the Unstable \'I\': Self, Shame, and Testimony in Annie Ernaux"',meta:"September 2024 · 5,100 words · ENGL 4210 Contemporary Prose",body:`<p>Annie Ernaux's project — to write the self as social document — constitutes one of the most politically audacious experiments in contemporary literary form. This paper argues that Ernaux's use of autofiction performs a radical act of testimony: transforming private experience, and specifically private shame, into collective social evidence.</p><p>Through close reading of The Years and Shame, I trace how Ernaux's grammatical choices — the first person plural, the ethnographic present, the deliberate flatness of affect — work to depersonalise the personal and situate individual experience within broader structures of class and gender.</p>`},
+  paper6:{type:"Dissertation Chapter · 2025",title:'"Embodied Dissent: The Female Body as Political Text in Angela Carter"',meta:"May 2025 · 9,000 words · Undergraduate Dissertation",body:`<p>This chapter argues that Angela Carter's deployment of the grotesque female body in The Bloody Chamber constitutes a systematic dismantling of fairy tale ideology and its patriarchal mythologies. Where the original tales use the female body as an object of punishment, rescue, or desire, Carter returns the body to its subject — rendering it monstrous, sexual, violent, and finally, irreducibly its own.</p><p>I read Carter through the lens of Mikhail Bakhtin's carnival grotesque, arguing that her inversions of fairy tale convention are not merely parodic but generative — they produce new imaginative possibilities for female selfhood by rupturing the narrative conventions that have historically constrained it.</p><p><em>This dissertation chapter received the highest mark in the cohort for undergraduate dissertation writing (82, First Class).</em></p>`},
+  paper7:{type:"Essay · Ecocriticism",title:'"Nature Writes Back: Ecocritical Readings of Pastoral Nostalgia in Hardy"',meta:"July 2024 · 4,700 words · Summer Research Essay",body:`<p>Thomas Hardy's Wessex is often read as elegiac — a pastoral idyll disappearing under the pressure of modernity. This essay proposes a more unsettling reading: that the Hardyan landscape is not merely mourned but conscripted, and that the nostalgic pastoral itself encodes a deeply colonial logic of possession, enclosure, and extraction.</p><p>Drawing on ecocritical frameworks developed by Timothy Morton, Raymond Williams, and Rob Nixon, I read Tess of the d'Urbervilles and The Return of the Native as texts in which the land is never simply background but always already a political actor.</p>`},
+  sem1:{type:"Seminar Presentation · Spring 2025",title:'"Poisoning the Domestic: Sensation, Secrets and the Victorian Home"',meta:"ENGL 3204 Victorian Literature · Spring 2025 · Presented to 40+ students and faculty",body:`<p>This seminar examined how the Victorian domestic space — ideologically constructed as a haven of moral safety — becomes, in sensation fiction, a site of danger, transgression, and concealment. Taking Lady Audley's Secret as its primary text, the presentation argued that the domestic interior functions as the primary stage for the genre's central epistemological drama: the gap between appearance and reality.</p><p>The talk was structured in three movements: first, an analysis of the domestic space as Foucauldian disciplinary architecture; second, a close reading of key scenes that dramatise the failure of that architecture to contain female transgression; and finally, a broader argument about what it means that the sensation novel so consistently locates danger within the home rather than outside it.</p>`},
+  sem2:{type:"Discussion Paper · Autumn 2024",title:'"Whose English? Language, Authority and the Postcolonial Writer"',meta:"ENGL 4102 Postcolonial Theory · Autumn 2024",body:`<p>This discussion paper examined three very different negotiations with the English language as a medium of colonial inheritance: Chinua Achebe's strategic appropriation, Ngũgĩ wa Thiong'o's decolonial abandonment, and Salman Rushdie's exuberant hybridisation.</p><p>The paper's central provocation was the question of whether "writing back" to empire in the empire's language is a meaningful form of resistance, or whether it necessarily reinscribes the authority it seeks to challenge.</p>`},
+  sem3:{type:"Symposium Paper · Best Paper Award",title:'"Reading Against the Grain: Queer Theory and the Literary Canon"',meta:"Annual Undergraduate Research Symposium 2025 · Winner: Best Undergraduate Paper",body:`<p>This paper argued for the application of queer theory to canonical texts beyond the obvious sites of explicit queer representation. Taking Eve Kosofsky Sedgwick's concept of the "homosexual panic" as a central tool, the paper read moments of intense male homosociality in Shakespeare's sonnets, Dickens' Great Expectations, and Conrad's Heart of Darkness as sites of queer textual excess.</p><p>The paper won the Best Undergraduate Paper Award at the 2025 Symposium and was recommended for submission to the University's undergraduate literary journal.</p>`},
+  sem4:{type:"Seminar Paper · Feminist Literary Criticism",title:'"The Madwoman is Not in the Attic: Re-reading Bertha Mason"',meta:"ENGL 3308 Feminist Literary Criticism · Spring 2025",body:`<p>Sandra Gilbert and Susan Gubar's landmark reading of Jane Eyre established Bertha Mason as Jane's repressed double. This seminar paper accepted that argument as a starting point and then pushed against it with considerable discomfort.</p><p>The central question: what are the costs of a feminist recuperation of Bertha that still needs her to be a symbol — of Jane's rage, of Victorian repression, of imperial violence? What if Bertha is not Jane's double but her own person, whose reduction to symbolism is itself a form of the violence the novel performs against her?</p>`},
+  sem5:{type:"Reading Group Presentation · Summer 2024",title:'"Grief as Form: Autofiction, Time, and Loss in Rachel Cusk\'s Outline Trilogy"',meta:"Contemporary Fiction Reading Group · Summer 2024",body:`<p>This close reading explored how Rachel Cusk's radical formal experiment — the near-total erasure of the narrator's interiority, the construction of the 'I' almost entirely through what others say — creates a new grammar for loss and female experience in the wake of self-dissolution.</p><p>The discussion centred on how the trilogy's refusal of conventional narrative selfhood is simultaneously a formal innovation and an emotional act: the narrator is someone who has survived the destruction of a self and has not yet found a new way to be.</p>`}
+};
+
+function openModal(id){
+  const d=papers[id];if(!d)return;
+  document.getElementById('modal-type').textContent=d.type;
+  document.getElementById('modal-title').textContent=d.title;
+  document.getElementById('modal-meta').textContent=d.meta;
+  document.getElementById('modal-body').innerHTML=d.body;
+  document.getElementById('paper-modal').style.display='block';
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('paper-modal').style.display='none';
+  document.body.style.overflow='';
+}
+
+function handleSubmit(e){
+  e.preventDefault();
+  if(['fname','femail','ftype','ftopic','fdesc'].some(id=>!document.getElementById(id).value)){
+    alert('Please fill in all required fields.');return;
+  }
+  document.getElementById('commission-form-wrap').style.display='none';
+  document.getElementById('form-success').style.display='block';
+}
+
+function toggleNav(){
+  const ov=document.getElementById('navOverlay');
+  const btn=document.getElementById('hamburger');
+  const open=ov.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function closeNav(){
+  document.getElementById('navOverlay').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// smooth scroll with nav offset
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href');
+    const el=id==='#'?document.body:document.querySelector(id);
+    if(!el)return;
+    e.preventDefault();
+    const navH=document.getElementById('mainNav').offsetHeight;
+    window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-navH,behavior:'smooth'});
+  });
+});
+
+// nav shrink on scroll
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>{
+  if(window.scrollY>50){nav.style.paddingTop='.65rem';nav.style.paddingBottom='.65rem';}
+  else{nav.style.paddingTop='';nav.style.paddingBottom='';}
+},{passive:true});
+</script>
+</body>
+</html>
